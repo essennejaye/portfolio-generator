@@ -1,18 +1,5 @@
-const fs = require('fs');
-
+const { writeFile, copyFile } = require(`./utils/generate-site.js`);
 const generatePage = require('./src/page-template.js');
-
-// const profileDataArgs = process.argv.slice(2, process.argv.length);
-
-// const [name, github] = profileDataArgs;
-
-// fs.writeFile('index.html', generatePage(name, github), err => {
-//     if (err) throw new Error (err);
-
-//     console.log('Portfolio complete! Checkout index.html to see the output!');
-// });
-
-
 
 const inquirer = require('inquirer');
 const promptUser = () => {
@@ -136,50 +123,22 @@ Add a New Project
             }
         });
 };
-const mockData = {
-    name: 'Satalia',
-    github: 'Essennejaye',
-    confirmAbout: true,
-    about: 'I like to code, but I am a beginner.',
-    projects: [
-      {
-        name: 'portfolio-generator',
-        description: 'It generates a portfolio page.',
-        languages: ['JavaScript', 'HTML', 'Node', 'ES6'],
-        link: 'essennejaye/portfolio-generator',
-        feature: true,
-        confirmAddProject: true
-      },
-      {
-        name: 'Taskinator',
-        description: "It's a productivity app that makes a to do list.",
-        languages: ['JavaScript','HTML', 'CSS', 'Bootstrap'],
-        link: 'essennejaye/taskinator',
-        feature: false,
-        confirmAddProject: true
-      },
-      {
-        name: 'Run Buddy',
-        description: "It's an awesome fitness app.",
-        languages: ['HTML', 'CSS', 'Bootstrap'],
-        link: 'essennejaye/run-buddy',
-        feature: true,
-        confirmAddProject: false
-      }
-    ]
-  }
 
-// promptUser()
-//     .then(promptProject)
-//     .then(portfolioData => {
-        const pageHTML = generatePage(mockData);
-
-        fs.writeFile('index.html', pageHTML, err => {
-            if (err) throw new Error (err);
-
-            console.log('Portfolio complete! Checkout index.html to see the output!');
-        });
-    // });
-
-
-
+promptUser()
+    .then(promptProject)
+    .then(portfolioData => {
+        return generatePage(portfolioData);
+    })
+    .then(pageHTML => {
+        return writeFile(pageHTML);
+    })
+    .then(writeFileResponse => {
+        console.log(writeFileResponse);
+        return copyFile();
+    })
+    .then(copyFileResponse => {
+        console.log(copyFileResponse);
+    })
+    .catch(err => {
+        console.log(err);
+    });
